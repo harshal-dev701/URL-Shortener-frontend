@@ -2,7 +2,7 @@ import { useState } from "react";
 import { getAnalytics } from "../api/url";
 import { getShortUrl } from "../config";
 import CopyButton from "./CopyButton";
-import { LinkIcon, SpinnerIcon, ChartIcon, ExternalLinkIcon } from "./icons";
+import { SpinnerIcon, ChartIcon, ExternalLinkIcon } from "./icons";
 
 function extractShortId(input) {
   const trimmed = input.trim();
@@ -76,9 +76,8 @@ export default function ClickCounter({ onCopied }) {
       {!analytics && (
         <form onSubmit={handleSubmit} className="w-full">
           <div
-            className={`relative flex flex-col sm:flex-row gap-3 p-2 bg-white rounded-2xl shadow-card border transition-shadow duration-200 focus-within:shadow-card-hover ${
-              error ? "border-google-red" : "border-google-border"
-            }`}
+            className={`relative flex flex-col sm:flex-row gap-3 p-2 bg-white rounded-2xl shadow-card border transition-shadow duration-200 focus-within:shadow-card-hover ${error ? "border-google-red" : "border-google-border"
+              }`}
           >
             <div className="flex flex-1 items-center gap-3 px-3 min-w-0">
               <ChartIcon className="w-5 h-5 text-google-gray shrink-0" />
