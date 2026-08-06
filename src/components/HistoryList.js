@@ -1,22 +1,24 @@
 import { getShortUrl } from "../config";
 import CopyButton from "./CopyButton";
 import { ChartIcon } from "./icons";
+import { useTranslation } from "../context/LanguageContext";
 
 export default function HistoryList({ items, onViewAnalytics, onCopied, onClear }) {
+  const { t } = useTranslation();
   if (items.length === 0) return null;
 
   return (
     <section className="w-full max-w-2xl mx-auto animate-fade-in" aria-label="Recent links">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-google-gray uppercase tracking-wider">
-          Recent links
+        <h2 className="text-sm font-semibold text-google-gray dark:text-slate-400 uppercase tracking-wider">
+          {t("recentLinksTitle")}
         </h2>
         <button
           type="button"
           onClick={onClear}
-          className="text-xs font-medium text-google-gray hover:text-google-red transition-colors focus:outline-none focus-visible:underline"
+          className="text-xs font-medium text-google-gray dark:text-slate-400 hover:text-google-red dark:hover:text-red-400 transition-colors focus:outline-none focus-visible:underline"
         >
-          Clear all
+          {t("clearAllBtn")}
         </button>
       </div>
 
@@ -26,7 +28,7 @@ export default function HistoryList({ items, onViewAnalytics, onCopied, onClear 
           return (
             <li
               key={item.shortId}
-              className="bg-white rounded-xl shadow-card border border-google-border p-4 hover:shadow-card-hover transition-shadow duration-200"
+              className="bg-white dark:bg-slate-900 rounded-xl shadow-card border border-google-border dark:border-slate-800 p-4 hover:shadow-card-hover transition-all duration-200"
             >
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
@@ -34,12 +36,12 @@ export default function HistoryList({ items, onViewAnalytics, onCopied, onClear 
                     href={shortUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-google-blue hover:underline truncate block"
+                    className="text-sm font-medium text-google-blue dark:text-blue-400 hover:underline truncate block"
                   >
                     {shortUrl}
                   </a>
                   <p
-                    className="text-xs text-google-gray truncate mt-0.5"
+                    className="text-xs text-google-gray dark:text-slate-400 truncate mt-0.5"
                     title={item.originalUrl}
                   >
                     {item.originalUrl}
@@ -49,7 +51,7 @@ export default function HistoryList({ items, onViewAnalytics, onCopied, onClear 
                   <button
                     type="button"
                     onClick={() => onViewAnalytics(item.shortId)}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-google-gray hover:bg-google-gray-light border border-google-border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-google-gray dark:text-slate-300 hover:bg-google-gray-light dark:hover:bg-slate-800 border border-google-border dark:border-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue"
                   >
                     <ChartIcon className="w-3.5 h-3.5" />
                     Stats

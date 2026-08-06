@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import QRCode from "qrcode";
 import { jsPDF } from "jspdf";
+import { useTranslation } from "../context/LanguageContext";
 
 // Preset colors
 const COLORS = [
@@ -53,6 +54,7 @@ export default function QrGenerator({ onCopied }) {
   const [customColor, setCustomColor] = useState("#1a73e8");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [downloadFormat, setDownloadFormat] = useState("png");
+  const { t } = useTranslation();
 
   const canvasRef = useRef(null);
   const isUrlValid = isValidUrl(text);
@@ -227,46 +229,47 @@ export default function QrGenerator({ onCopied }) {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 animate-fade-in">
+    <div className="w-full max-w-4xl mx-auto space-y-8 animate-fade-in min-h-[550px] transition-colors duration-200">
       <section className="text-center mb-4">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-3">
-          QR Code Generator
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-3">
+          {t("qrTitle")}
         </h2>
-        <p className="text-base sm:text-lg text-google-gray max-w-md mx-auto leading-relaxed">
-          Create high-quality QR codes with custom styling, brand colors, and frames. Download them instantly for print or digital use.
+        <p className="text-base sm:text-lg text-google-gray dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+          {t("qrSubtitle")}
         </p>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Settings Area */}
-        <div className="md:col-span-7 bg-white border border-google-border rounded-2xl shadow-card p-6 sm:p-8 space-y-6">
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-google-border dark:border-slate-800 rounded-2xl shadow-card p-6 sm:p-8 space-y-6">
           {/* Input field */}
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-900">1. Enter URL link</label>
-            <div className="relative flex items-center p-2 bg-white rounded-xl border border-google-border focus-within:border-google-blue focus-within:shadow-sm transition-all">
+            <label className="text-sm font-semibold text-gray-900 dark:text-white">1. Enter URL link</label>
+            <div className="relative flex items-center p-2 bg-white dark:bg-slate-900 rounded-xl border border-google-border dark:border-slate-800 focus-within:border-google-blue dark:focus-within:border-blue-500 focus-within:shadow-sm transition-all">
               <input
                 type="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="https://example.com"
-                className="w-full px-3 py-2.5 text-base text-gray-900 bg-transparent border-0 outline-none focus:ring-0"
+                placeholder={t("qrInputPlaceholder")}
+                className="w-full px-3 py-2.5 text-base text-gray-900 dark:text-white bg-transparent border-0 outline-none focus:ring-0"
               />
             </div>
           </div>
 
           {/* Dot styles */}
           <div className="space-y-3">
-            <label className="text-sm font-semibold text-gray-900 block">2. Select a style</label>
+            <label className="text-sm font-semibold text-gray-900 dark:text-white block">2. Select a style</label>
             <div className="grid grid-cols-3 gap-3">
               {DOT_STYLES.map((style) => (
                 <button
                   key={style.id}
                   type="button"
                   onClick={() => setDotStyle(style.id)}
-                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${dotStyle === style.id
-                    ? "bg-google-blue-light text-google-blue border-google-blue shadow-sm"
-                    : "bg-white text-google-gray border-google-border hover:bg-google-gray-light hover:text-gray-950"
-                    }`}
+                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${
+                    dotStyle === style.id
+                      ? "bg-google-blue-light/50 dark:bg-blue-950/40 text-google-blue dark:text-blue-400 border-google-blue dark:border-blue-700 shadow-sm"
+                      : "bg-white dark:bg-slate-900 text-google-gray dark:text-slate-400 border-google-border dark:border-slate-800 hover:bg-google-gray-light dark:hover:bg-slate-800 hover:text-gray-950 dark:hover:text-white"
+                  }`}
                 >
                   {style.label}
                 </button>
@@ -276,7 +279,7 @@ export default function QrGenerator({ onCopied }) {
 
           {/* Color Selector */}
           <div className="space-y-3">
-            <label className="text-sm font-semibold text-gray-900 block">3. Choose your color</label>
+            <label className="text-sm font-semibold text-gray-900 dark:text-white block">3. Choose your color</label>
             <div className="flex flex-wrap items-center gap-3">
               {COLORS.map((c) => (
                 <button
@@ -284,8 +287,9 @@ export default function QrGenerator({ onCopied }) {
                   type="button"
                   onClick={() => handleColorChange(c.value)}
                   style={{ backgroundColor: c.value }}
-                  className={`w-9 h-9 rounded-full relative transition-transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-google-blue ${color === c.value ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
-                    }`}
+                  className={`w-9 h-9 rounded-full relative transition-transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-google-blue ${
+                    color === c.value ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
+                  }`}
                   title={c.name}
                 >
                   {color === c.value && (
@@ -299,10 +303,9 @@ export default function QrGenerator({ onCopied }) {
                 <button
                   type="button"
                   onClick={() => setShowColorPicker(!showColorPicker)}
-                  className={`w-9 h-9 rounded-full border border-google-border bg-gradient-to-tr from-red-500 via-green-500 to-blue-600 relative transition-transform hover:scale-105 active:scale-95 ${!COLORS.some((c) => c.value === color)
-                    ? "ring-2 ring-offset-2 ring-google-blue scale-105"
-                    : ""
-                    }`}
+                  className={`w-9 h-9 rounded-full border border-google-border dark:border-slate-700 bg-gradient-to-tr from-red-500 via-green-500 to-blue-600 relative transition-transform hover:scale-105 active:scale-95 ${
+                    !COLORS.some((c) => c.value === color) ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
+                  }`}
                   title="Custom Color"
                 >
                   {!COLORS.some((c) => c.value === color) && (
@@ -313,20 +316,23 @@ export default function QrGenerator({ onCopied }) {
                 </button>
 
                 {showColorPicker && (
-                  <div className="absolute left-0 mt-2 p-3 bg-white border border-google-border rounded-xl shadow-card z-10 flex flex-col gap-2">
-                    <input
-                      type="color"
-                      value={customColor}
-                      onChange={(e) => handleColorChange(e.target.value)}
-                      className="w-16 h-10 cursor-pointer rounded"
-                    />
-                    <input
-                      type="text"
-                      value={customColor}
-                      onChange={(e) => handleColorChange(e.target.value)}
-                      className="w-20 px-2 py-1 text-xs font-mono border border-google-border rounded text-center"
-                    />
-                  </div>
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setShowColorPicker(false)} />
+                    <div className="absolute left-0 mt-2 p-3 bg-white dark:bg-slate-900 border border-google-border dark:border-slate-800 rounded-xl shadow-card z-20 flex flex-col gap-2">
+                      <input
+                        type="color"
+                        value={customColor}
+                        onChange={(e) => handleColorChange(e.target.value)}
+                        className="w-16 h-10 cursor-pointer rounded bg-transparent border-0"
+                      />
+                      <input
+                        type="text"
+                        value={customColor}
+                        onChange={(e) => handleColorChange(e.target.value)}
+                        className="w-20 px-2 py-1 text-xs font-mono border border-google-border dark:border-slate-800 rounded text-center text-gray-900 dark:text-white bg-transparent"
+                      />
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -334,17 +340,18 @@ export default function QrGenerator({ onCopied }) {
 
           {/* Frame options */}
           <div className="space-y-3">
-            <label className="text-sm font-semibold text-gray-900 block">4. Select a frame</label>
+            <label className="text-sm font-semibold text-gray-900 dark:text-white block">4. Select a frame</label>
             <div className="grid grid-cols-2 gap-3">
               {FRAMES.map((f) => (
                 <button
                   key={f.id}
                   type="button"
                   onClick={() => setFrame(f.id)}
-                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${frame === f.id
-                    ? "bg-google-blue-light text-google-blue border-google-blue shadow-sm"
-                    : "bg-white text-google-gray border-google-border hover:bg-google-gray-light hover:text-gray-950"
-                    }`}
+                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${
+                    frame === f.id
+                      ? "bg-google-blue-light/50 dark:bg-blue-950/40 text-google-blue dark:text-blue-400 border-google-blue dark:border-blue-700 shadow-sm"
+                      : "bg-white dark:bg-slate-900 text-google-gray dark:text-slate-400 border-google-border dark:border-slate-800 hover:bg-google-gray-light dark:hover:bg-slate-800 hover:text-gray-950 dark:hover:text-white"
+                  }`}
                 >
                   {f.label}
                 </button>
@@ -354,25 +361,26 @@ export default function QrGenerator({ onCopied }) {
         </div>
 
         {/* Live Preview Area */}
-        <div className="md:col-span-5 bg-white border border-google-border rounded-2xl shadow-card p-6 sm:p-8 flex flex-col items-center justify-center gap-6">
-          <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider pb-2 border-b border-google-border w-full text-center">
+        <div className="lg:col-span-5 bg-white dark:bg-slate-900 border border-google-border dark:border-slate-800 rounded-2xl shadow-card p-6 sm:p-8 flex flex-col items-center justify-center gap-6">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider pb-2 border-b border-google-border dark:border-slate-800 w-full text-center">
             Live Preview
           </h3>
 
-          <div className="relative border border-google-border p-3 rounded-2xl bg-white shadow-sm flex items-center justify-center max-w-[310px] max-h-[400px] overflow-hidden">
+          <div className="relative border border-google-border dark:border-slate-800 p-3 rounded-2xl bg-white shadow-sm flex items-center justify-center max-w-[310px] max-h-[400px] overflow-hidden">
             <canvas
               ref={canvasRef}
-              className={`max-w-full h-auto rounded-lg transition-all duration-300 ${!isUrlValid ? "filter blur-[6px] select-none pointer-events-none opacity-40" : ""
-                }`}
+              className={`max-w-full h-auto rounded-lg transition-all duration-300 ${
+                !isUrlValid ? "filter blur-[6px] select-none pointer-events-none opacity-40" : ""
+              }`}
             />
             {!isUrlValid && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[1px] p-4 text-center">
-                <div className="bg-white p-3 rounded-full shadow-lg border border-google-border text-google-red">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 dark:bg-slate-900/60 backdrop-blur-[1px] p-4 text-center">
+                <div className="bg-white dark:bg-slate-900 p-3 rounded-full shadow-lg border border-google-border dark:border-slate-800 text-google-red">
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
-                <span className="mt-3 text-xs font-semibold text-gray-800 bg-white/90 px-3 py-1 rounded-full shadow-sm border border-google-border">
+                <span className="mt-3 text-xs font-semibold text-gray-800 dark:text-slate-200 bg-white/90 dark:bg-slate-900/95 px-3 py-1 rounded-full shadow-sm border border-google-border dark:border-slate-800">
                   Enter a valid URL to unlock
                 </span>
               </div>
@@ -380,22 +388,23 @@ export default function QrGenerator({ onCopied }) {
           </div>
 
           <div className="w-full space-y-2">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block text-center">
+            <label className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider block text-center">
               Download Format
             </label>
-            <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-50 border border-google-border rounded-xl">
+            <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-50 dark:bg-slate-800 border border-google-border dark:border-slate-700 rounded-xl">
               {["png", "jpg", "pdf"].map((fmt) => (
                 <button
                   key={fmt}
                   type="button"
                   disabled={!isUrlValid}
                   onClick={() => setDownloadFormat(fmt)}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${!isUrlValid
-                    ? "text-gray-400 cursor-not-allowed"
-                    : downloadFormat === fmt
+                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${
+                    !isUrlValid
+                      ? "text-gray-400 dark:text-slate-600 cursor-not-allowed"
+                      : downloadFormat === fmt
                       ? "bg-google-blue text-white shadow-md transform scale-[1.02]"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    }`}
+                      : "text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700"
+                  }`}
                 >
                   .{fmt}
                 </button>
@@ -407,10 +416,11 @@ export default function QrGenerator({ onCopied }) {
             type="button"
             onClick={handleDownload}
             disabled={!isUrlValid}
-            className={`w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 shadow-sm ${isUrlValid
-              ? "bg-google-blue hover:bg-google-blue-hover active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue focus-visible:ring-offset-2"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300"
-              }`}
+            className={`w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 shadow-sm ${
+              isUrlValid
+                ? "bg-google-blue hover:bg-google-blue-hover active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue focus-visible:ring-offset-2"
+                : "bg-gray-200 dark:bg-slate-800 text-gray-400 dark:text-slate-600 cursor-not-allowed border border-gray-300 dark:border-slate-700"
+            }`}
           >
             {isUrlValid ? (
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -421,7 +431,7 @@ export default function QrGenerator({ onCopied }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             )}
-            {isUrlValid ? `Download as ${downloadFormat.toUpperCase()}` : "Downloads Locked"}
+            {isUrlValid ? `${t("downloadBtn")} (.${downloadFormat.toUpperCase()})` : "Downloads Locked"}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LinkIcon, SpinnerIcon } from "./icons";
+import { useTranslation } from "../context/LanguageContext";
 
 function isValidUrl(value) {
   try {
@@ -13,6 +14,7 @@ function isValidUrl(value) {
 export default function UrlForm({ onSubmit, isLoading }) {
   const [url, setUrl] = useState("");
   const [touched, setTouched] = useState(false);
+  const { t } = useTranslation();
 
   const trimmed = url.trim();
   const showError = touched && trimmed && !isValidUrl(trimmed);
@@ -28,22 +30,22 @@ export default function UrlForm({ onSubmit, isLoading }) {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
       <div
-        className={`relative flex flex-col sm:flex-row gap-3 p-2 bg-white rounded-2xl shadow-card border transition-shadow duration-200 focus-within:shadow-card-hover ${
-          showError ? "border-google-red" : "border-google-border"
+        className={`relative flex flex-col sm:flex-row gap-3 p-2 bg-white dark:bg-slate-900 rounded-2xl shadow-card border transition-all duration-200 focus-within:shadow-card-hover ${
+          showError ? "border-google-red dark:border-red-500" : "border-google-border dark:border-slate-800"
         }`}
       >
         <div className="flex flex-1 items-center gap-3 px-3 min-w-0">
-          <LinkIcon className="w-5 h-5 text-google-gray shrink-0" />
+          <LinkIcon className="w-5 h-5 text-google-gray dark:text-slate-400 shrink-0" />
           <input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             onBlur={() => setTouched(true)}
-            placeholder="Paste your long URL here..."
+            placeholder={t("inputPlaceholder")}
             aria-label="Long URL to shorten"
             aria-invalid={showError}
             aria-describedby={showError ? "url-error" : undefined}
-            className="flex-1 min-w-0 py-3 text-base text-gray-900 placeholder:text-gray-400 bg-transparent border-0 outline-none focus:ring-0"
+            className="flex-1 min-w-0 py-3 text-base text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-500 bg-transparent border-0 outline-none focus:ring-0"
             disabled={isLoading}
           />
         </div>
@@ -55,16 +57,16 @@ export default function UrlForm({ onSubmit, isLoading }) {
           {isLoading ? (
             <>
               <SpinnerIcon className="w-4 h-4" />
-              Shortening...
+              {t("shorteningBtn")}
             </>
           ) : (
-            "Shorten URL"
+            t("shortenBtn")
           )}
         </button>
       </div>
       {showError && (
-        <p id="url-error" role="alert" className="mt-2 text-sm text-google-red px-2">
-          Please enter a valid URL starting with http:// or https://
+        <p id="url-error" role="alert" className="mt-2 text-sm text-google-red dark:text-red-400 px-2">
+          {t("validUrlError")}
         </p>
       )}
     </form>
