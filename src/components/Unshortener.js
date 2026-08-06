@@ -43,7 +43,7 @@ export default function Unshortener({ onCopied }) {
           Unshorten URL
         </h2>
         <p className="text-base sm:text-lg text-google-gray max-w-md mx-auto leading-relaxed">
-          Paste a shortened link (like bit.ly, tinyurl, or our own) to inspect its original destination safely.
+          Paste a shortened link to inspect its original destination safely.
         </p>
       </section>
 
@@ -98,8 +98,8 @@ export default function Unshortener({ onCopied }) {
               <h3 className="text-lg font-semibold text-gray-900">Unshortened Result</h3>
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${result.isInternal
-                    ? "bg-google-blue-light text-google-blue"
-                    : "bg-amber-50 text-amber-700 border border-amber-200"
+                  ? "bg-google-blue-light text-google-blue"
+                  : "bg-amber-50 text-amber-700 border border-amber-200"
                   }`}
               >
                 {result.isInternal ? "Internal Shortlink" : "External Redirect"}

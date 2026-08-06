@@ -33,6 +33,18 @@ function isFinderPattern(row, col, size) {
   return false;
 }
 
+function isValidUrl(string) {
+  const val = (string || "").trim();
+  if (!val) return false;
+  const testVal = /^https?:\/\//i.test(val) ? val : `https://${val}`;
+  try {
+    const url = new URL(testVal);
+    return url.hostname.includes(".") || url.hostname === "localhost";
+  } catch (_) {
+    return false;
+  }
+}
+
 export default function QrGenerator({ onCopied }) {
   const [text, setText] = useState("https://example.com");
   const [dotStyle, setDotStyle] = useState("classic");
@@ -43,6 +55,7 @@ export default function QrGenerator({ onCopied }) {
   const [downloadFormat, setDownloadFormat] = useState("png");
 
   const canvasRef = useRef(null);
+  const isUrlValid = isValidUrl(text);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -77,8 +90,12 @@ export default function QrGenerator({ onCopied }) {
       canvasHeight += 45;
     }
 
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    const scale = 4;
+    canvas.width = canvasWidth * scale;
+    canvas.height = canvasHeight * scale;
+
+    // Scale context to draw in HD quality
+    ctx.scale(scale, scale);
 
     // Draw background
     ctx.fillStyle = "#ffffff";
@@ -183,6 +200,7 @@ export default function QrGenerator({ onCopied }) {
   };
 
   const handleDownload = () => {
+    if (!isUrlValid) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -341,8 +359,24 @@ export default function QrGenerator({ onCopied }) {
             Live Preview
           </h3>
 
-          <div className="relative border border-google-border p-3 rounded-2xl bg-white shadow-sm flex items-center justify-center max-w-[310px] max-h-[400px]">
-            <canvas ref={canvasRef} className="max-w-full h-auto rounded-lg" />
+          <div className="relative border border-google-border p-3 rounded-2xl bg-white shadow-sm flex items-center justify-center max-w-[310px] max-h-[400px] overflow-hidden">
+            <canvas
+              ref={canvasRef}
+              className={`max-w-full h-auto rounded-lg transition-all duration-300 ${!isUrlValid ? "filter blur-[6px] select-none pointer-events-none opacity-40" : ""
+                }`}
+            />
+            {!isUrlValid && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[1px] p-4 text-center">
+                <div className="bg-white p-3 rounded-full shadow-lg border border-google-border text-google-red">
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <span className="mt-3 text-xs font-semibold text-gray-800 bg-white/90 px-3 py-1 rounded-full shadow-sm border border-google-border">
+                  Enter a valid URL to unlock
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="w-full space-y-2">
@@ -354,12 +388,14 @@ export default function QrGenerator({ onCopied }) {
                 <button
                   key={fmt}
                   type="button"
+                  disabled={!isUrlValid}
                   onClick={() => setDownloadFormat(fmt)}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${
-                    downloadFormat === fmt
+                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${!isUrlValid
+                    ? "text-gray-400 cursor-not-allowed"
+                    : downloadFormat === fmt
                       ? "bg-google-blue text-white shadow-md transform scale-[1.02]"
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   .{fmt}
                 </button>
@@ -370,12 +406,22 @@ export default function QrGenerator({ onCopied }) {
           <button
             type="button"
             onClick={handleDownload}
-            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white bg-google-blue hover:bg-google-blue-hover transition-all duration-200 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue focus-visible:ring-offset-2 shadow-sm"
+            disabled={!isUrlValid}
+            className={`w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 shadow-sm ${isUrlValid
+              ? "bg-google-blue hover:bg-google-blue-hover active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue focus-visible:ring-offset-2"
+              : "bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300"
+              }`}
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download as {downloadFormat.toUpperCase()}
+            {isUrlValid ? (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            )}
+            {isUrlValid ? `Download as ${downloadFormat.toUpperCase()}` : "Downloads Locked"}
           </button>
         </div>
       </div>
