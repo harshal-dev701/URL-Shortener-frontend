@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import QRCode from "qrcode";
+import { jsPDF } from "jspdf";
 
 // Preset colors
 const COLORS = [
@@ -39,6 +40,7 @@ export default function QrGenerator({ onCopied }) {
   const [frame, setFrame] = useState("none");
   const [customColor, setCustomColor] = useState("#1a73e8");
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [downloadFormat, setDownloadFormat] = useState("png");
 
   const canvasRef = useRef(null);
 
@@ -184,14 +186,26 @@ export default function QrGenerator({ onCopied }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const url = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `qrcode_${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    onCopied?.("QR Code downloaded!");
+    if (downloadFormat === "pdf") {
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+      doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, canvas.width, canvas.height);
+      doc.save(`qrcode_${Date.now()}.pdf`);
+    } else {
+      const mimeType = downloadFormat === "jpg" ? "image/jpeg" : "image/png";
+      const fileExt = downloadFormat;
+      const url = canvas.toDataURL(mimeType);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `qrcode_${Date.now()}.${fileExt}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    onCopied?.(`QR Code downloaded as ${downloadFormat.toUpperCase()}!`);
   };
 
   return (
@@ -331,8 +345,26 @@ export default function QrGenerator({ onCopied }) {
             <canvas ref={canvasRef} className="max-w-full h-auto rounded-lg" />
           </div>
 
-          <div className="text-sm font-semibold text-gray-900  tracking-wider pb-2 border-b border-google-border w-full text-center">
-            Note: This is a standard QR Code preview.
+          <div className="w-full space-y-2">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block text-center">
+              Download Format
+            </label>
+            <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-50 border border-google-border rounded-xl">
+              {["png", "jpg", "pdf"].map((fmt) => (
+                <button
+                  key={fmt}
+                  type="button"
+                  onClick={() => setDownloadFormat(fmt)}
+                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${
+                    downloadFormat === fmt
+                      ? "bg-google-blue text-white shadow-md transform scale-[1.02]"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  }`}
+                >
+                  .{fmt}
+                </button>
+              ))}
+            </div>
           </div>
 
           <button
@@ -343,7 +375,7 @@ export default function QrGenerator({ onCopied }) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            Download QR Code
+            Download as {downloadFormat.toUpperCase()}
           </button>
         </div>
       </div>
