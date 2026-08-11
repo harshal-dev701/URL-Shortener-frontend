@@ -4,9 +4,9 @@ export default function CookiesPolicy() {
   return (
     <div className="w-full max-w-3xl mx-auto bg-white dark:bg-slate-900 border border-google-border dark:border-slate-800 rounded-2xl shadow-card p-8 sm:p-10 animate-fade-in space-y-8 transition-colors duration-200">
       <section className="text-center pb-6 border-b border-google-border dark:border-slate-800">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mb-3">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mb-3">
           Cookies Policy
-        </h2>
+        </h1>
         <p className="text-base text-google-gray dark:text-slate-400 max-w-lg mx-auto">
           Understand how we use cookies and web storage to enhance your experience.
         </p>

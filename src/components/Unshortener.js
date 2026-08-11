@@ -41,9 +41,9 @@ export default function Unshortener({ onCopied }) {
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8 animate-fade-in min-h-[550px] transition-colors duration-200">
       <section className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-3">
           {t("unshortenTitle")}
-        </h2>
+        </h1>
         <p className="text-base sm:text-lg text-google-gray dark:text-slate-400 max-w-md mx-auto leading-relaxed">
           {t("unshortenSubtitle")}
         </p>
