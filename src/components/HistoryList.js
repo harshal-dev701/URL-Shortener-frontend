@@ -42,9 +42,9 @@ export default function HistoryList({ items, onViewAnalytics, onCopied, onClear 
                   </a>
                   <p
                     className="text-xs text-google-gray dark:text-slate-400 truncate mt-0.5"
-                    title={item.originalUrl}
+                    title={item.originalUrl || item.redirectURL}
                   >
-                    {item.originalUrl}
+                    {item.originalUrl || item.redirectURL}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">

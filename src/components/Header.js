@@ -2,14 +2,35 @@ import { BRAND_NAME } from "../config/global";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon, GlobeIcon, LinkIcon, MonitorIcon, MoonIcon, SunIcon } from "./icons";
 import { useTranslation } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import AuthModal from "./AuthModal";
 
 const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsThemeOpen, isThemeOpen, showToast }) => {
     const { t, language, setLanguage, languages } = useTranslation();
     const { theme, setTheme } = useTheme();
+    const { user, isAuthenticated, logoutUser } = useAuth();
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [authModalMode, setAuthModalMode] = useState("signin");
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+    useEffect(() => {
+        const handleOpenSignIn = () => {
+            setAuthModalMode("signin");
+            setIsAuthModalOpen(true);
+        };
+        const handleOpenSignUp = () => {
+            setAuthModalMode("signup");
+            setIsAuthModalOpen(true);
+        };
+        window.addEventListener("open-signin-modal", handleOpenSignIn);
+        window.addEventListener("open-signup-modal", handleOpenSignUp);
+        return () => {
+            window.removeEventListener("open-signin-modal", handleOpenSignIn);
+            window.removeEventListener("open-signup-modal", handleOpenSignUp);
+        };
+    }, []);
 
 
     return (
@@ -142,7 +163,7 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                                             onClick={() => {
                                                 setTheme(item.key);
                                                 setIsThemeOpen(false);
-                                                showToast(`Theme set to ${item.label}`);
+                                                // showToast(`Theme set to ${item.label}`);
                                             }}
                                             className={`w-full flex items-center gap-2.5 px-4 py-2 text-sm text-left hover:bg-google-gray-light dark:hover:bg-slate-800 transition-colors ${theme === item.key
                                                 ? "text-google-blue dark:text-blue-400 font-semibold bg-google-blue-light/30 dark:bg-blue-950/20"
@@ -166,11 +187,9 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                 className="relative flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-google-blue rounded-full transition-transform active:scale-95"
                             >
-                                <img
-                                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80&q=80"
-                                    alt="User Profile"
-                                    className="w-9 h-9 rounded-full border border-google-border dark:border-slate-700 shadow-sm object-cover"
-                                />
+                                <div className="w-9 h-9 rounded-full bg-google-blue text-white flex items-center justify-center font-bold text-sm uppercase shadow-sm border border-google-border dark:border-slate-700">
+                                    {user?.name?.charAt(0) || "U"}
+                                </div>
                                 <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white dark:ring-slate-900" />
                             </button>
 
@@ -179,8 +198,8 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
                                     <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white dark:bg-slate-900 border border-google-border dark:border-slate-800 shadow-lg py-2.5 z-50 animate-fade-in text-left">
                                         <div className="px-4 py-2 border-b border-google-border dark:border-slate-800">
-                                            <p className="text-sm font-semibold text-gray-900 dark:text-white">Alex Morgan</p>
-                                            <p className="text-xs text-google-gray dark:text-slate-400 truncate">alex.morgan@example.com</p>
+                                            <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || "User"}</p>
+                                            <p className="text-xs text-google-gray dark:text-slate-400 truncate">{user?.email || "user@example.com"}</p>
                                         </div>
 
                                         <div className="py-1">
@@ -188,6 +207,7 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                                                 type="button"
                                                 onClick={() => {
                                                     setIsUserMenuOpen(false);
+                                                    navigateTo("/dashboard");
                                                 }}
                                                 className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-left text-gray-700 dark:text-slate-300 hover:bg-google-gray-light dark:hover:bg-slate-800 transition-colors"
                                             >
@@ -198,6 +218,7 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                                                 type="button"
                                                 onClick={() => {
                                                     setIsUserMenuOpen(false);
+                                                    navigateTo("/settings");
                                                 }}
                                                 className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-left text-gray-700 dark:text-slate-300 hover:bg-google-gray-light dark:hover:bg-slate-800 transition-colors"
                                             >
@@ -210,9 +231,10 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    setIsAuthenticated(false);
+                                                    logoutUser();
                                                     setIsUserMenuOpen(false);
                                                     showToast("Logged out successfully");
+                                                    navigateTo("/");
                                                 }}
                                                 className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-left text-google-red dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                                             >
@@ -229,7 +251,7 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setIsAuthenticated(true);
+                                    setIsAuthModalOpen(true);
                                 }}
                                 className="px-3.5 py-2 text-sm font-semibold rounded-lg text-google-gray dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                             >
@@ -239,6 +261,7 @@ const Header = ({ currentPage, navigateTo, setIsLangOpen, isLangOpen, setIsTheme
                     )}
                 </div>
             </div>
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} initialMode={authModalMode} />
         </header>
     )
 }

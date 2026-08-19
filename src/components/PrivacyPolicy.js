@@ -1,4 +1,5 @@
 import React from "react";
+import { BRAND_NAME } from "../config/global";
 
 export default function PrivacyPolicy() {
   return (
@@ -29,7 +30,7 @@ export default function PrivacyPolicy() {
 
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">3. Data Sharing</h3>
         <p>
-          ShortLink does not share, lease, sell, or distribute your shortened link details or analytics with third-party advertisers or third-party tracking services. All analytics statistics are accessible only to whoever has the shortened link's analytics ID.
+          {BRAND_NAME} does not share, lease, sell, or distribute your shortened link details or analytics with third-party advertisers or third-party tracking services. All analytics statistics are accessible only to whoever has the shortened link's analytics ID.
         </p>
 
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">4. Contact Us</h3>

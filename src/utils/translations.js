@@ -68,6 +68,11 @@ export const translations = {
     terms: "Terms of Use",
     privacy: "Privacy Policy",
     cookies: "Cookie Policy",
+    topCountriesLabel: "Top Countries",
+    topCitiesLabel: "Top Cities",
+    locationLabel: "Location",
+    unknownLocation: "Unknown Location",
+    visitorStatsTitle: "Visitor Geolocation Stats",
   },
   es: {
     shortener: "Acortador",

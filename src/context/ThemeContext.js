@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useLayoutEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
@@ -12,9 +12,9 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("theme", newTheme);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = window.document.documentElement;
-    
+
     const applyTheme = () => {
       if (theme === "dark") {
         root.classList.add("dark");
@@ -38,7 +38,7 @@ export function ThemeProvider({ children }) {
       const handleSystemThemeChange = () => {
         applyTheme();
       };
-      
+
       mediaQuery.addEventListener("change", handleSystemThemeChange);
       return () => mediaQuery.removeEventListener("change", handleSystemThemeChange);
     }

@@ -1,4 +1,5 @@
 import React from "react";
+import { BRAND_NAME } from "../config/global";
 
 export default function Terms() {
   return (
@@ -8,14 +9,14 @@ export default function Terms() {
           Terms & Conditions
         </h1>
         <p className="text-base text-google-gray dark:text-slate-400 max-w-lg mx-auto">
-          Please review the guidelines for using ShortLink.
+          Please review the guidelines for using {BRAND_NAME}.
         </p>
       </section>
 
       <div className="space-y-6 text-gray-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">1. Acceptance of Terms</h3>
         <p>
-          By accessing or using ShortLink, you agree to comply with and be bound by these Terms & Conditions. If you do not agree, please do not use our service.
+          By accessing or using {BRAND_NAME}, you agree to comply with and be bound by these Terms & Conditions. If you do not agree, please do not use our service.
         </p>
 
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">2. Acceptable Use</h3>

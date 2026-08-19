@@ -1,4 +1,5 @@
 import React from "react";
+import { BRAND_NAME } from "../config/global";
 
 export default function CookiesPolicy() {
   return (
@@ -18,7 +19,7 @@ export default function CookiesPolicy() {
           Cookies and local storage are small text files placed on your computer or mobile device when you browse websites. They enable websites to remember user settings, history, and preferences.
         </p>
 
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">How ShortLink Uses Cookies & Web Storage</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white">How {BRAND_NAME} Uses Cookies & Web Storage</h3>
         <p>
           We use local browser storage and minimal cookies strictly for functional, user-centric purposes:
         </p>

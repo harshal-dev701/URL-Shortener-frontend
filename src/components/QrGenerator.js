@@ -265,11 +265,10 @@ export default function QrGenerator({ onCopied }) {
                   key={style.id}
                   type="button"
                   onClick={() => setDotStyle(style.id)}
-                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${
-                    dotStyle === style.id
-                      ? "bg-google-blue-light/50 dark:bg-blue-950/40 text-google-blue dark:text-blue-400 border-google-blue dark:border-blue-700 shadow-sm"
-                      : "bg-white dark:bg-slate-900 text-google-gray dark:text-slate-400 border-google-border dark:border-slate-800 hover:bg-google-gray-light dark:hover:bg-slate-800 hover:text-gray-950 dark:hover:text-white"
-                  }`}
+                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${dotStyle === style.id
+                    ? "bg-google-blue-light/50 dark:bg-blue-950/40 text-google-blue dark:text-blue-400 border-google-blue dark:border-blue-700 shadow-sm"
+                    : "bg-white dark:bg-slate-900 text-google-gray dark:text-slate-400 border-google-border dark:border-slate-800 hover:bg-google-gray-light dark:hover:bg-slate-800 hover:text-gray-950 dark:hover:text-white"
+                    }`}
                 >
                   {style.label}
                 </button>
@@ -287,9 +286,8 @@ export default function QrGenerator({ onCopied }) {
                   type="button"
                   onClick={() => handleColorChange(c.value)}
                   style={{ backgroundColor: c.value }}
-                  className={`w-9 h-9 rounded-full relative transition-transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-google-blue ${
-                    color === c.value ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
-                  }`}
+                  className={`w-9 h-9 rounded-full relative transition-transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-google-blue ${color === c.value ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
+                    }`}
                   title={c.name}
                 >
                   {color === c.value && (
@@ -303,9 +301,8 @@ export default function QrGenerator({ onCopied }) {
                 <button
                   type="button"
                   onClick={() => setShowColorPicker(!showColorPicker)}
-                  className={`w-9 h-9 rounded-full border border-google-border dark:border-slate-700 bg-gradient-to-tr from-red-500 via-green-500 to-blue-600 relative transition-transform hover:scale-105 active:scale-95 ${
-                    !COLORS.some((c) => c.value === color) ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
-                  }`}
+                  className={`w-9 h-9 rounded-full border border-google-border dark:border-slate-700 bg-gradient-to-tr from-red-500 via-green-500 to-blue-600 relative transition-transform hover:scale-105 active:scale-95 ${!COLORS.some((c) => c.value === color) ? "ring-2 ring-offset-2 ring-google-blue scale-105" : ""
+                    }`}
                   title="Custom Color"
                 >
                   {!COLORS.some((c) => c.value === color) && (
@@ -347,11 +344,10 @@ export default function QrGenerator({ onCopied }) {
                   key={f.id}
                   type="button"
                   onClick={() => setFrame(f.id)}
-                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${
-                    frame === f.id
-                      ? "bg-google-blue-light/50 dark:bg-blue-950/40 text-google-blue dark:text-blue-400 border-google-blue dark:border-blue-700 shadow-sm"
-                      : "bg-white dark:bg-slate-900 text-google-gray dark:text-slate-400 border-google-border dark:border-slate-800 hover:bg-google-gray-light dark:hover:bg-slate-800 hover:text-gray-950 dark:hover:text-white"
-                  }`}
+                  className={`py-3 px-4 rounded-xl border text-xs font-semibold transition-all duration-200 ${frame === f.id
+                    ? "bg-google-blue-light/50 dark:bg-blue-950/40 text-google-blue dark:text-blue-400 border-google-blue dark:border-blue-700 shadow-sm"
+                    : "bg-white dark:bg-slate-900 text-google-gray dark:text-slate-400 border-google-border dark:border-slate-800 hover:bg-google-gray-light dark:hover:bg-slate-800 hover:text-gray-950 dark:hover:text-white"
+                    }`}
                 >
                   {f.label}
                 </button>
@@ -369,9 +365,8 @@ export default function QrGenerator({ onCopied }) {
           <div className="relative border border-google-border dark:border-slate-800 p-3 rounded-2xl bg-white shadow-sm flex items-center justify-center max-w-[310px] max-h-[400px] overflow-hidden">
             <canvas
               ref={canvasRef}
-              className={`max-w-full h-auto rounded-lg transition-all duration-300 ${
-                !isUrlValid ? "filter blur-[6px] select-none pointer-events-none opacity-40" : ""
-              }`}
+              className={`max-w-full h-auto rounded-lg transition-all duration-300 ${!isUrlValid ? "filter blur-[6px] select-none pointer-events-none opacity-40" : ""
+                }`}
             />
             {!isUrlValid && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 dark:bg-slate-900/60 backdrop-blur-[1px] p-4 text-center">
@@ -398,13 +393,12 @@ export default function QrGenerator({ onCopied }) {
                   type="button"
                   disabled={!isUrlValid}
                   onClick={() => setDownloadFormat(fmt)}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${
-                    !isUrlValid
-                      ? "text-gray-400 dark:text-slate-600 cursor-not-allowed"
-                      : downloadFormat === fmt
+                  className={`py-2 px-3 rounded-lg text-xs font-bold uppercase transition-all duration-200 ${!isUrlValid
+                    ? "text-gray-400 dark:text-slate-600 cursor-not-allowed"
+                    : downloadFormat === fmt
                       ? "bg-google-blue text-white shadow-md transform scale-[1.02]"
                       : "text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   .{fmt}
                 </button>
@@ -416,11 +410,10 @@ export default function QrGenerator({ onCopied }) {
             type="button"
             onClick={handleDownload}
             disabled={!isUrlValid}
-            className={`w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 shadow-sm ${
-              isUrlValid
-                ? "bg-google-blue hover:bg-google-blue-hover active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue focus-visible:ring-offset-2"
-                : "bg-gray-200 dark:bg-slate-800 text-gray-400 dark:text-slate-600 cursor-not-allowed border border-gray-300 dark:border-slate-700"
-            }`}
+            className={`w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 shadow-sm ${isUrlValid
+              ? "bg-google-blue hover:bg-google-blue-hover active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-google-blue focus-visible:ring-offset-2"
+              : "bg-gray-200 dark:bg-slate-800 text-gray-400 dark:text-slate-600 cursor-not-allowed border border-gray-300 dark:border-slate-700"
+              }`}
           >
             {isUrlValid ? (
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
